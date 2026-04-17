@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/UI/Navbar';
+import MobileNav from './components/UI/MobileNav';
 import Starfield from './components/Background/Starfield';
 import AnimatedRoutes from './components/UI/AnimatedRoutes';
 import CustomCursor from './components/UI/CustomCursor';
@@ -19,6 +20,7 @@ function App() {
 
           {/* Navigation */}
           <Navbar />
+          <MobileNav />
 
           {/* Page Routing */}
           <div className="relative z-10 w-full flex justify-center">

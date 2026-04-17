@@ -62,32 +62,40 @@ const Profile = () => {
             <div className="flex flex-col md:flex-row gap-8">
                 {/* Left Sidebar - Profile Summary */}
                 <div className="w-full md:w-1/3 space-y-6">
-                    <FloatingCard className="p-8 border border-white/10 flex flex-col items-center text-center relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-neon/10 rounded-full blur-3xl"></div>
-                        <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-cyan-neon to-pink-neon mb-4 p-1">
-                            <div className="w-full h-full bg-space-950 rounded-full flex items-center justify-center text-3xl font-orbitron font-bold">
+                    <FloatingCard className="p-8 border border-white/5 flex flex-col items-center text-center relative overflow-hidden bg-space-950/40">
+                        {/* Biometric Scan Visual */}
+                        <div className="absolute top-0 left-0 w-full h-[2px] bg-cyan-neon/20 animate-scan-slow opacity-40"></div>
+                        
+                        <div className="w-24 h-24 rounded-sm bg-white/5 mb-6 p-1 relative border border-white/10 group">
+                            <div className="absolute -inset-2 border border-cyan-neon/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div className="w-full h-full bg-space-950 rounded-sm flex items-center justify-center text-4xl font-orbitron font-black text-cyan-neon">
                                 {user.name.charAt(0)}
                             </div>
                         </div>
-                        <h2 className="text-2xl font-orbitron font-bold mb-1">{user.name}</h2>
-                        <p className="text-gray-400 text-sm mb-6">{user.email}</p>
-                        
-                        <div className="w-full h-[1px] bg-white/10 mb-6"></div>
 
-                        <div className="w-full flex justify-between items-center text-sm mb-2">
-                            <span className="text-gray-400 flex items-center gap-2"><Ticket className="w-4 h-4"/> Tickets</span>
-                            <span className="font-bold text-cyan-neon">12</span>
+                        <div className="mb-6 space-y-1">
+                            <h2 className="text-2xl font-orbitron font-black uppercase tracking-tighter text-white">{user.name}</h2>
+                            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.3em]">Alias: {user.name.split(' ')[0]}_01</p>
                         </div>
-                        <div className="w-full flex justify-between items-center text-sm mb-6">
-                            <span className="text-gray-400 flex items-center gap-2"><Film className="w-4 h-4"/> Watched</span>
-                            <span className="font-bold text-pink-neon">5</span>
+                        
+                        <div className="w-full h-px bg-white/5 mb-8"></div>
+
+                        <div className="w-full space-y-4 mb-10">
+                            <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
+                                <span className="text-gray-500 flex items-center gap-2"><Ticket className="w-3 h-3 text-cyan-neon"/> Tickets</span>
+                                <span className="text-pink-neon">12_ACTV</span>
+                            </div>
+                            <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
+                                <span className="text-gray-500 flex items-center gap-2"><Film className="w-3 h-3 text-cyan-neon"/> Archive</span>
+                                <span className="text-gray-400">05_PASS</span>
+                            </div>
                         </div>
 
                         <button 
                             onClick={logout}
-                            className="w-full py-3 mt-4 text-red-400 hover:text-white hover:bg-red-500/20 rounded-lg flex items-center justify-center gap-2 transition-colors border border-transparent hover:border-red-500/30 cursor-pointer"
+                            className="cyber-border w-full py-4 text-[10px] font-black uppercase tracking-[0.2em] text-red-500/60 hover:text-red-400 hover:bg-red-500/5 transition-all cursor-pointer"
                         >
-                            <LogOut className="w-4 h-4" /> Disconnect Sequence
+                            Terminate_Session
                         </button>
                     </FloatingCard>
                 </div>

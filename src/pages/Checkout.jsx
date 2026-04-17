@@ -87,34 +87,36 @@ const Checkout = () => {
             exit={{ opacity: 0, scale: 0.95 }}
             className="pt-32 pb-20 px-6 min-h-screen text-white w-full max-w-4xl mx-auto"
         >
-            <h1 className="text-3xl font-orbitron font-bold text-center mb-10">
-                Reserving: <span className="text-cyan-neon">{show.movie.title}</span>
+            <h1 className="text-4xl md:text-5xl font-orbitron font-black text-center mb-10 uppercase tracking-tighter">
+                Sector: <span className="text-cyan-neon">{show.movie.title}</span>
             </h1>
 
             {!success ? (
-                <div className="flex flex-col md:flex-row gap-12">
+                <div className="flex flex-col md:flex-row gap-8 md:gap-12">
                     {/* Seat Map */}
                     <div className="flex-1">
-                        <FloatingCard className="p-8 border border-white/10">
+                        <FloatingCard className="p-4 md:p-8 border border-white/5 bg-space-950/20 relative overflow-hidden">
+                            {/* Animated scanning line overlay */}
+                            <div className="absolute inset-x-0 top-0 h-[1px] bg-cyan-neon/10 animate-scan-slow opacity-30" />
+
                             {/* Screen Graphic */}
-                            <div className="w-full h-12 bg-gradient-to-t from-cyan-neon/40 to-transparent rounded-t-3xl border-b-[3px] border-cyan-neon mb-16 shadow-[0_10px_40px_rgba(6,182,212,0.3)] relative">
-                                <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-sm font-bold text-gray-400 tracking-[0.3em] uppercase">Stage</span>
+                            <div className="w-full h-16 bg-gradient-to-t from-cyan-neon/30 to-transparent rounded-t-[100px] border-b-[2px] border-cyan-neon mb-16 shadow-[0_15px_40px_rgba(6,182,212,0.2)] relative flex items-center justify-center">
+                                <span className="text-[10px] font-black text-cyan-neon tracking-[0.6em] uppercase opacity-60">Visual Projection Field</span>
                             </div>
 
-                            {/* Seats Grid */}
-                            <div className="grid grid-cols-5 gap-3 max-w-sm mx-auto">
+                            {/* Seats Grid - Scaling for mobile */}
+                            <div className="grid grid-cols-5 gap-2 md:gap-3 max-w-sm mx-auto mb-10">
                                 {show.seats.map(seat => {
-                                    let baseClass = "w-10 h-10 rounded-t-lg rounded-b-sm border-2 flex items-center justify-center text-xs font-bold transition-all cursor-pointer ";
+                                    let baseClass = "w-10 h-10 md:w-12 md:h-12 rounded-sm border flex items-center justify-center text-[10px] font-black transition-all cursor-pointer font-orbitron ";
                                     
                                     if (seat.status === 'booked') {
-                                        baseClass += "bg-white/10 border-white/5 text-transparent cursor-not-allowed overflow-hidden relative";
-                                        baseClass += " after:content-[''] after:absolute after:inset-0 after:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjM3I0MTUxIiBzdHJva2Utd2lkdGg9IjIiPjxsaW5lIHgxPSIxOCIgeTE9IjYiIHgyPSI2IiB5Mj0iMTgiPjwvbGluZT48bGluZSB4MT0iNiIgeTE9IjYiIHgyPSIxOCIgeTI9IjE4Ij48L2xpbmU+PC9zdmc+')] after:bg-center after:bg-no-repeat after:opacity-30";
+                                        baseClass += "bg-white/5 border-white/5 text-transparent cursor-not-allowed overflow-hidden grayscale opacity-20";
                                     } else if (seat.status === 'locked') {
-                                        baseClass += "bg-yellow-500/20 border-yellow-500/50 text-yellow-500 cursor-not-allowed";
+                                        baseClass += "bg-yellow-500/10 border-yellow-500/30 text-yellow-500/50 cursor-not-allowed animate-pulse";
                                     } else if (selectedSeats.includes(seat.seatId)) {
-                                        baseClass += "bg-pink-neon border-pink-neon text-white shadow-[0_0_15px_rgba(255,42,133,0.6)] scale-110";
+                                        baseClass += "bg-pink-neon border-pink-neon text-white shadow-[0_0_20px_#ff007a] scale-110 rotate-3";
                                     } else {
-                                        baseClass += "bg-transparent border-cyan-neon/30 text-gray-300 hover:border-cyan-neon hover:bg-cyan-neon/10";
+                                        baseClass += "bg-transparent border-white/10 text-gray-600 hover:border-cyan-neon hover:text-cyan-neon hover:bg-cyan-neon/5";
                                     }
 
                                     return (
@@ -130,34 +132,48 @@ const Checkout = () => {
                             </div>
 
                             {/* Legend */}
-                            <div className="flex justify-center gap-6 mt-12 text-sm text-gray-400">
-                                <div className="flex items-center gap-2"><div className="w-4 h-4 rounded-t border-2 border-cyan-neon/30"></div> Available</div>
-                                <div className="flex items-center gap-2"><div className="w-4 h-4 rounded-t bg-pink-neon border-2 border-pink-neon"></div> Selected</div>
-                                <div className="flex items-center gap-2"><div className="w-4 h-4 rounded-t bg-white/10 border-2 border-white/5 relative after:content-[''] after:absolute after:inset-0 after:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjM3I0MTUxIiBzdHJva2Utd2lkdGg9IjIiPjxsaW5lIHgxPSIxOCIgeTE9IjYiIHgyPSI2IiB5Mj0iMTgiPjwvbGluZT48bGluZSB4MT0iNiIgeTE9IjYiIHgyPSIxOCIgeTI9IjE4Ij48L2xpbmU+PC9zdmc+')] after:bg-center after:bg-no-repeat after:opacity-30"></div> Taken</div>
+                            <div className="flex flex-wrap justify-center gap-6 mt-12 text-[9px] font-black uppercase tracking-widest text-gray-600 border-t border-white/5 pt-8">
+                                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-sm border border-white/20"></div> Available</div>
+                                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-sm bg-pink-neon"></div> Selected</div>
+                                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-sm bg-white/10 opacity-30"></div> Occupied</div>
                             </div>
                         </FloatingCard>
                     </div>
 
                     {/* Summary Sidebar */}
                     <div className="w-full md:w-80 shrink-0">
-                        <FloatingCard className="p-6 border border-white/10 sticky top-32">
-                            <h3 className="text-xl font-orbitron font-bold border-b border-white/10 pb-4 mb-4">Transaction</h3>
+                        <FloatingCard className="p-8 border border-white/5 sticky top-32 bg-space-950/40">
+                            <h3 className="text-xl font-orbitron font-black uppercase tracking-tighter border-b border-white/5 pb-4 mb-6">MANIFEST</h3>
                             
-                            <div className="space-y-3 mb-6">
-                                <div className="flex justify-between text-gray-300">
-                                    <span>Selected Seats</span>
-                                    <span className="font-bold text-white">{selectedSeats.length > 0 ? selectedSeats.join(', ') : '-'}</span>
+                            <div className="space-y-4 mb-8">
+                                <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                                    <span>Allocated Sectors</span>
+                                    <span className="text-white font-black">{selectedSeats.length > 0 ? selectedSeats.join(', ') : 'NONE_'}</span>
                                 </div>
-                                <div className="flex justify-between text-gray-300">
-                                    <span>Price per unit</span>
-                                    <span>${show.price}</span>
+                                <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                                    <span>Unit Valuation</span>
+                                    <span className="text-white font-black">${show.price}</span>
                                 </div>
-                                <div className="w-full h-[1px] bg-white/10 my-2"></div>
-                                <div className="flex justify-between text-lg">
-                                    <span className="font-bold">Total</span>
-                                    <span className="font-bold text-pink-neon">${totalAmount}</span>
+                                <div className="w-full h-px bg-white/5 my-4"></div>
+                                <div className="flex justify-between items-center text-sm font-black uppercase tracking-[0.2em]">
+                                    <span className="text-gray-400">Total Net</span>
+                                    <span className="text-2xl text-pink-neon font-orbitron font-black">${totalAmount}</span>
                                 </div>
                             </div>
+
+                            <button 
+                                onClick={handleMockCheckout}
+                                disabled={selectedSeats.length === 0 || processing}
+                                className={`cyber-border w-full py-5 rounded-sm font-black uppercase tracking-widest text-xs flex justify-center items-center gap-3 transition-all ${
+                                    selectedSeats.length === 0 
+                                    ? 'bg-white/5 text-gray-700 cursor-not-allowed opacity-50' 
+                                    : 'bg-cyan-neon text-black hover:bg-white box-glow cursor-pointer'
+                                }`}
+                            >
+                                {processing ? <><Loader2 className="animate-spin w-4 h-4"/> Uplinking Data...</> : 'Initialize Transaction'}
+                            </button>
+                        </FloatingCard>
+                    </div>
 
                             <button 
                                 onClick={handleMockCheckout}

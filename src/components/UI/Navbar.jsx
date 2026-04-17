@@ -43,13 +43,13 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-6">
-          <button className="p-2 hover:bg-cyan-neon/10 rounded-sm transition-all cursor-pointer text-gray-400 hover:text-cyan-neon">
+          <button className="p-2 hover:bg-cyan-neon/10 rounded-sm transition-all cursor-pointer text-gray-400 hover:text-cyan-neon hidden sm:block">
             <Search className="w-5 h-5" />
           </button>
           
           {user ? (
-            <div className="flex items-center gap-4 border-l border-white/10 pl-4">
-              <Link to="/profile" className="text-[10px] font-black uppercase tracking-widest text-white hidden sm:block hover:text-cyan-neon transition-colors cursor-pointer">
+            <div className="flex items-center gap-4 sm:border-l sm:border-white/10 sm:pl-4">
+              <Link to="/profile" className="text-[10px] font-black uppercase tracking-widest text-white hidden md:block hover:text-cyan-neon transition-colors cursor-pointer">
                 ID:// {user.name}
               </Link>
               <button onClick={logout} className="p-2 hover:bg-red-500/10 rounded-sm transition-colors cursor-pointer text-gray-500 hover:text-red-400">
@@ -57,7 +57,7 @@ const Navbar = () => {
               </button>
             </div>
           ) : (
-            <button onClick={() => setShowLogin(true)} className="cyber-border px-6 py-2 bg-white/5 text-[10px] font-black uppercase tracking-widest hover:bg-cyan-neon hover:text-black transition-all cursor-pointer">
+            <button onClick={() => setShowLogin(true)} className="cyber-border px-4 sm:px-6 py-2 bg-white/5 text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] hover:bg-cyan-neon hover:text-black transition-all cursor-pointer">
               Initialize
             </button>
           )}
