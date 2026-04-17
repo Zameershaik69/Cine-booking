@@ -4,12 +4,16 @@ import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/UI/Navbar';
 import Starfield from './components/Background/Starfield';
 import AnimatedRoutes from './components/UI/AnimatedRoutes';
+import CustomCursor from './components/UI/CustomCursor';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <div className="min-h-screen relative overflow-hidden font-sans text-white">
+          {/* Custom Interactive Cursor */}
+          <CustomCursor />
+
           {/* Global 3D Background */}
           <Starfield />
 

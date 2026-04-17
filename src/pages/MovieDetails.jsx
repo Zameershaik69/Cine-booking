@@ -102,26 +102,31 @@ const MovieDetails = () => {
 
                         <div className="flex flex-wrap gap-2 mb-8">
                             {movie.genres?.map(g => (
-                                <span key={g} className="px-4 py-1 rounded border border-white/20 text-xs font-bold uppercase tracking-wider">{g}</span>
+                                <span key={g} className="px-4 py-1.5 rounded-sm bg-white/5 border border-white/10 text-[10px] font-bold uppercase tracking-wider text-cyan-neon font-orbitron">{g}</span>
                             ))}
                         </div>
 
-                        <h3 className="text-xl font-bold font-orbitron text-cyan-neon mb-2">Synopsis</h3>
-                        <p className="text-gray-300 text-lg leading-relaxed mb-8 max-w-3xl">
+                        <div className="flex items-center gap-2 mb-4 text-[10px] font-bold text-gray-500 uppercase tracking-[0.3em]">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_#22c55e]"></div>
+                            Sector Connectivity: Stable
+                        </div>
+
+                        <h3 className="text-xl font-black font-orbitron text-white mb-2 uppercase tracking-tighter">Synopsis</h3>
+                        <p className="text-gray-400 text-lg leading-relaxed mb-8 max-w-3xl border-l border-white/10 pl-6">
                             {movie.overview}
                         </p>
 
-                        <div className="mb-10">
-                            {movie.director && <p className="mb-2"><span className="text-gray-500 font-bold">Director:</span> {movie.director}</p>}
-                            {movie.cast && <p><span className="text-gray-500 font-bold">Cast:</span> {movie.cast.join(', ')}</p>}
+                        <div className="mb-10 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                            {movie.director && <p><span className="text-gray-600 font-bold uppercase text-[10px] tracking-widest block mb-1">Director</span> <span className="text-white">{movie.director}</span></p>}
+                            {movie.cast && <p><span className="text-gray-600 font-bold uppercase text-[10px] tracking-widest block mb-1">Lead Personnel</span> <span className="text-white">{movie.cast.join(', ')}</span></p>}
                         </div>
 
                         <Link 
                             to="/checkout" 
                             state={{ showId: 'show_mock_123', mockMovie: movie }}
-                            className="inline-flex items-center justify-center gap-2 px-10 py-4 bg-gradient-to-r from-pink-neon to-purple-600 rounded-full font-bold text-lg hover:shadow-[0_0_30px_rgba(255,42,133,0.5)] transition-all cursor-pointer"
+                            className="cyber-border inline-flex items-center justify-center gap-3 px-12 py-5 bg-pink-neon text-white font-black uppercase tracking-[0.2em] text-sm hover:bg-white hover:text-black transition-all pink-glow group"
                         >
-                            <Users className="w-5 h-5"/> Select Seats
+                            <Users className="w-5 h-5"/> Initiate Reservation
                         </Link>
                     </motion.div>
                 </div>

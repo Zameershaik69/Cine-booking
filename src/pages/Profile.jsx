@@ -94,45 +94,50 @@ const Profile = () => {
 
                 {/* Right Area - Booking History */}
                 <div className="w-full md:w-2/3">
-                    <h2 className="text-3xl font-orbitron font-bold mb-6 flex items-center gap-3">
-                        <Ticket className="text-cyan-neon w-8 h-8"/> Flight Logs
+                    <h2 className="text-3xl font-orbitron font-black uppercase tracking-tighter mb-6 flex items-center gap-3">
+                        <div className="w-2 h-8 bg-cyan-neon shadow-[0_0_10px_#00f3ff]"></div>
+                        Flight Logs
                     </h2>
 
                     {loading ? (
-                        <div className="glass p-10 rounded-2xl border border-white/10 flex flex-col items-center justify-center text-gray-400">
-                            <Loader2 className="w-10 h-10 animate-spin text-cyan-neon mb-4" />
-                            <p>Retrieving transaction archives...</p>
+                        <div className="glass p-12 rounded-2xl border border-white/10 flex flex-col items-center justify-center text-gray-500">
+                            <Loader2 className="w-12 h-12 animate-spin text-cyan-neon mb-6" />
+                            <p className="font-orbitron text-xs tracking-[0.3em] uppercase">Decrypting Transaction Archives...</p>
                         </div>
                     ) : (
-                        <div className="space-y-4">
+                        <div className="space-y-6">
                             {bookings.map((booking, idx) => (
                                 <motion.div 
                                     key={booking.id}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
+                                    initial={{ opacity: 0, x: 20 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true }}
                                     transition={{ delay: idx * 0.1 }}
-                                    className="glass p-5 rounded-2xl border border-white/10 flex flex-col sm:flex-row gap-5 hover:border-cyan-neon/30 transition-colors"
+                                    className="glass p-6 rounded-2xl border border-white/5 flex flex-col sm:flex-row gap-6 hover:border-cyan-neon/40 transition-all group relative overflow-hidden"
                                 >
-                                    <div className="w-full sm:w-24 shrink-0 aspect-[2/3] sm:aspect-square overflow-hidden rounded-lg">
-                                        <img src={booking.poster} alt={booking.movie} className="w-full h-full object-cover" />
+                                    {/* Scanline Overlay */}
+                                    <div className="absolute inset-x-0 top-0 h-[1px] bg-cyan-neon/20 group-hover:bg-cyan-neon/50 transition-colors" />
+
+                                    <div className="w-full sm:w-28 shrink-0 aspect-[2/3] sm:aspect-square overflow-hidden rounded-lg border border-white/10">
+                                        <img src={booking.poster} alt={booking.movie} className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 transition-all duration-500" />
                                     </div>
                                     <div className="flex-1 flex flex-col justify-between">
                                         <div>
                                             <div className="flex justify-between items-start mb-2">
-                                                <h3 className="font-bold text-xl font-orbitron text-white">{booking.movie}</h3>
-                                                <span className={`text-xs font-bold uppercase px-3 py-1 rounded-full ${booking.status === 'confirmed' ? 'bg-cyan-neon/20 text-cyan-neon border border-cyan-neon/30' : 'bg-white/10 text-gray-400 border border-white/20'}`}>
+                                                <h3 className="font-black text-2xl font-orbitron text-white uppercase tracking-tighter line-height-none">{booking.movie}</h3>
+                                                <span className={`text-[10px] font-black uppercase px-3 py-1 rounded border ${booking.status === 'confirmed' ? 'bg-cyan-neon/10 text-cyan-neon border-cyan-neon/30' : 'bg-white/5 text-gray-500 border-white/10'}`}>
                                                     {booking.status}
                                                 </span>
                                             </div>
-                                            <div className="text-sm text-gray-400 space-y-1">
-                                                <p className="flex items-center gap-2"><Calendar className="w-4 h-4"/> {new Date(booking.date).toLocaleString()}</p>
-                                                <p>ID: {booking.id} • Seats: {booking.seats.join(', ')}</p>
+                                            <div className="text-xs font-bold text-gray-500 space-y-1 uppercase tracking-widest">
+                                                <p className="flex items-center gap-2"><Calendar className="w-3 h-3 text-cyan-neon"/> {new Date(booking.date).toDateString()}</p>
+                                                <p className="text-[10px] opacity-60">ID:// {booking.id} • SECTORS:// {booking.seats.join(', ')}</p>
                                             </div>
                                         </div>
-                                        <div className="mt-4 flex justify-between items-center border-t border-white/10 pt-3">
-                                            <span className="font-bold text-pink-neon">${booking.amount}</span>
+                                        <div className="mt-6 flex justify-between items-center border-t border-white/5 pt-4">
+                                            <span className="font-black text-xl font-orbitron text-pink-neon">${booking.amount}</span>
                                             {booking.status === 'confirmed' && (
-                                                <button className="text-sm glass px-4 py-1.5 rounded hover:bg-white/10 transition-colors border border-white/20 cursor-pointer">
+                                                <button className="cyber-border px-6 py-2 bg-white/5 hover:bg-cyan-neon hover:text-black text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer">
                                                     Download Pass
                                                 </button>
                                             )}

@@ -1,69 +1,87 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;700&family=Syne:wght@400;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @theme {
-  --color-space-950: #020617;
-  --color-space-900: #0a0a0a;
-  --color-nebula-purple: #7e22ce;
-  --color-nebula-pink: #be185d;
-  --color-cyan-neon: #06b6d4;
-  --color-pink-neon: #ec4899;
+  --color-space-950: #02040a;
+  --color-space-900: #050b1a;
+  --color-cyan-neon: #00f3ff;
+  --color-pink-neon: #ff007a;
+  --color-purple-action: #7000ff;
   
   --font-orbitron: "Orbitron", sans-serif;
-  
-  --animate-float: float 6s ease-in-out infinite;
-  --animate-glow: glow 2s ease-in-out infinite alternate;
-  
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
-  }
-  
-  @keyframes glow {
-    from { box-shadow: 0 0 10px var(--color-cyan-neon), 0 0 20px var(--color-cyan-neon); }
-    to { box-shadow: 0 0 20px var(--color-cyan-neon), 0 0 40px var(--color-cyan-neon); }
-  }
+  --font-syne: "Syne", sans-serif;
+  --font-outfit: "Outfit", sans-serif;
 }
 
 :root {
-  background-color: #020617;
+  background-color: #02040a;
   color: white;
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Outfit', sans-serif;
   overflow-x: hidden;
+  cursor: none; /* Custom high-tech cursor will be implemented */
 }
 
-body {
-  margin: 0;
-  min-height: 100vh;
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #02040a;
+}
+::-webkit-scrollbar-thumb {
+  background: #00f3ff;
+  box-shadow: 0 0 10px #00f3ff;
 }
 
+/* Gritty Scanline Overlay */
+body::before {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+              linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  z-index: 9999;
+  background-size: 100% 2.5px, 2.5px 100%;
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+/* Glitch Animation Keyframes */
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+.glitch-hover:hover {
+  animation: glitch 0.3s cubic-bezier(.25,.46,.45,.94) both infinite;
+  text-shadow: 2px 0 #ff007a, -2px 0 #00f3ff;
+}
+
+/* Glassmorphism Components */
 .glass {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  background: rgba(10, 15, 30, 0.7);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.neon-border {
-  border: 1px solid rgba(6, 182, 212, 0.5);
-  transition: all 0.3s ease;
+.box-glow {
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
 }
 
-.neon-border:hover {
-  border-color: #06b6d4;
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.6);
+.pink-glow {
+  box-shadow: 0 0 25px rgba(255, 0, 122, 0.4);
 }
 
-.scrolling-hide::-webkit-scrollbar {
-  display: none;
-}
-
-.scrolling-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* Custom styles for the 3D canvas background */
+/* 3D Canvas Fix */
 #canvas-container {
   position: fixed;
   top: 0;
@@ -71,5 +89,39 @@ body {
   width: 100%;
   height: 100%;
   z-index: -1;
-  background: radial-gradient(circle at center, #0a0a2a 0%, #020617 100%);
+  pointer-events: none;
+}
+
+/* Cyberpunk Borders */
+.cyber-border {
+  position: relative;
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+}
+
+.cyber-border::after {
+  content: "";
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  width: 20px;
+  height: 20px;
+  background: #00f3ff;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+/* Interactive Glowing Line */
+.glow-line {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00f3ff, transparent);
+  width: 100%;
+  box-shadow: 0 0 10px #00f3ff;
+}
+
+/* CRT Flicker */
+@keyframes flicker {
+  0% { opacity: 0.27861; }
+  5% { opacity: 0.34769; }
+  10% { opacity: 0.23604; }
+  /* ... more frames ... */
+  100% { opacity: 0.35; }
 }

@@ -1,70 +1,90 @@
-import React, { useRef } from "react";
+import React, { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Stars, Float, PerspectiveCamera } from "@react-three/drei";
+import { Points, PointMaterial, PerspectiveCamera, Float } from "@react-three/drei";
+import * as THREE from "three";
 
-const MovingStars = () => {
-  const starsRef = useRef();
+const ParticleField = ({ count = 5000, color = "#00f3ff", size = 0.015 }) => {
+  const points = useRef();
+  
+  const particles = useMemo(() => {
+    const temp = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+        temp[i * 3] = (Math.random() - 0.5) * 20;
+        temp[i * 3 + 1] = (Math.random() - 0.5) * 20;
+        temp[i * 3 + 2] = (Math.random() - 0.5) * 20;
+    }
+    return temp;
+  }, [count]);
 
   useFrame((state) => {
-    if (starsRef.current) {
-      // Subtle rotation for a feeling of drifting through space
-      starsRef.current.rotation.y = state.clock.getElapsedTime() * 0.05;
-      starsRef.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.1) * 0.1;
-    }
+    const time = state.clock.getElapsedTime();
+    points.current.rotation.y = time * 0.02;
+    points.current.rotation.x = time * 0.01;
+    
+    // Interactive mouse parallax logic
+    const targetX = state.mouse.x * 0.5;
+    const targetY = state.mouse.y * 0.5;
+    points.current.position.x += (targetX - points.current.position.x) * 0.05;
+    points.current.position.y += (targetY - points.current.position.y) * 0.05;
   });
 
   return (
-    <group ref={starsRef}>
-      <Stars 
-        radius={100} 
-        depth={50} 
-        count={7000} 
-        factor={4} 
-        saturation={0} 
-        fade 
-        speed={1} 
+    <Points ref={points} positions={particles} stride={3} frustumCulled={false}>
+      <PointMaterial
+        transparent
+        color={color}
+        size={size}
+        sizeAttenuation={true}
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
       />
-    </group>
+    </Points>
   );
+};
+
+const GrittyNebula = () => {
+    return (
+        <group>
+            {/* Cyan Primary Field */}
+            <ParticleField count={3000} color="#00f3ff" size={0.02} />
+            {/* Pink Secondary Field */}
+            <ParticleField count={1500} color="#ff007a" size={0.03} />
+            {/* White Distant Background */}
+            <ParticleField count={4000} color="#ffffff" size={0.008} />
+        </group>
+    );
 };
 
 const Starfield = () => {
   return (
     <div id="canvas-container">
-      <Canvas>
-        <PerspectiveCamera makeDefault position={[0, 0, 5]} />
-        <color attach="background" args={["#020617"]} />
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} intensity={1} />
+      <Canvas dpr={[1, 2]}>
+        <PerspectiveCamera makeDefault position={[0, 0, 8]} />
+        <color attach="background" args={["#02040a"]} />
         
-        <MovingStars />
-        
-        {/* Adds a deeper sense of space with floating nebula-like points */}
-        <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
-          <mesh position={[-5, 2, -10]}>
-            <sphereGeometry args={[0.5, 32, 32]} />
-            <meshStandardMaterial 
-              color="#7e22ce" 
-              emissive="#7e22ce" 
-              emissiveIntensity={2} 
-              transparent 
-              opacity={0.3} 
-            />
-          </mesh>
+        <ambientLight intensity={0.2} />
+        <pointLight position={[10, 10, 10]} intensity={1} color="#00f3ff" />
+        <pointLight position={[-10, -10, -10]} intensity={0.5} color="#ff007a" />
+
+        <GrittyNebula />
+
+        {/* Floating High-Tech Orbs */}
+        <Float speed={1.5} rotationIntensity={2} floatIntensity={2}>
+            <mesh position={[-6, 3, -5]}>
+                <octahedronGeometry args={[0.4]} />
+                <meshStandardMaterial color="#00f3ff" wireframe emissive="#00f3ff" emissiveIntensity={5} />
+            </mesh>
         </Float>
 
-        <Float speed={3} rotationIntensity={0.8} floatIntensity={1}>
-          <mesh position={[5, -3, -15]}>
-            <sphereGeometry args={[0.8, 32, 32]} />
-            <meshStandardMaterial 
-              color="#06b6d4" 
-              emissive="#06b6d4" 
-              emissiveIntensity={2} 
-              transparent 
-              opacity={0.2} 
-            />
-          </mesh>
+        <Float speed={2} rotationIntensity={3} floatIntensity={1}>
+            <mesh position={[6, -4, -8]}>
+                <octahedronGeometry args={[0.3]} />
+                <meshStandardMaterial color="#ff007a" wireframe emissive="#ff007a" emissiveIntensity={5} />
+            </mesh>
         </Float>
+
+        {/* Atmospheric Fog */}
+        <fog attach="fog" args={["#02040a", 5, 20]} />
       </Canvas>
     </div>
   );
