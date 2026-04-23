@@ -2,111 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import FloatingCard from '../components/UI/FloatingCard';
-import { Play, Cpu, Zap, Activity } from 'lucide-react';
-
-const MOCK_MOVIES = [
-    {
-        _id: 'm1',
-        title: "Interstellar Resurgence",
-        overview: "A team of explorers return through the wormhole to save a dying star system.",
-        posterPath: "https://images.unsplash.com/photo-1542204165-65bf26472b9b?q=80&w=600&auto=format&fit=crop",
-        backdropPath: "https://images.unsplash.com/photo-1542204165-65bf26472b9b?q=80&w=1200",
-        releaseDate: "2026-11-05",
-        voteAverage: 9.4
-    },
-    {
-        _id: 'm2',
-        title: "Blade Runner: 2049",
-        overview: "A young blade runner's discovery of a long-buried secret leads him to track down a former blade runner.",
-        posterPath: "https://images.unsplash.com/photo-1618519764620-7403abdbdee9?q=80&w=600&auto=format&fit=crop",
-        releaseDate: "2017-10-06",
-        voteAverage: 8.4
-    },
-    {
-        _id: 'm3',
-        title: "Dune: Prophecy",
-        overview: "The secret origins of the Bene Gesserit are revealed in a war-torn galaxy.",
-        posterPath: "https://images.unsplash.com/photo-1506466010722-395aa2bef877?q=80&w=600&auto=format&fit=crop",
-        releaseDate: "2024-11-17",
-        voteAverage: 8.8
-    },
-    {
-        _id: 'm4',
-        title: "Arrival: First Signal",
-        overview: "Linguist Louise Banks leads an elite team of investigators when gigantic spaceships touch down around the world.",
-        posterPath: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600&auto=format&fit=crop",
-        releaseDate: "2016-11-11",
-        voteAverage: 7.9
-    },
-    {
-        _id: 'm5',
-        title: "The Matrix: Neo",
-        overview: "A new era of human-machine interface begins as the binary code evolves.",
-        posterPath: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=600&auto=format&fit=crop",
-        releaseDate: "2021-12-22",
-        voteAverage: 6.7
-    },
-    {
-        _id: 'm6',
-        title: "Oblivion Protocol",
-        overview: "A veteran assigned to extract Earth's remaining resources begins to question what he knows about his mission.",
-        posterPath: "https://images.unsplash.com/photo-1446776811953-b23d5732194f?q=80&w=600&auto=format&fit=crop",
-        releaseDate: "2013-04-19",
-        voteAverage: 7.0
-    },
-    {
-        _id: 'm7',
-        title: "Solaris Echo",
-        overview: "Psychologist Kris Kelvin travels to a space station to investigate a series of mysterious deaths.",
-        posterPath: "https://images.unsplash.com/photo-1635393040182-3e742416b048?q=80&w=600&auto=format&fit=crop",
-        releaseDate: "2025-03-22",
-        voteAverage: 8.2
-    },
-    {
-        _id: 'm8',
-        title: "Ad Astra: Void",
-        overview: "Astronaut Roy McBride undertakes a mission to the outer edges of the solar system.",
-        posterPath: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=600&auto=format&fit=crop",
-        releaseDate: "2019-09-20",
-        voteAverage: 6.5
-    },
-    {
-        _id: 'm9',
-        title: "Ghost In Shell",
-        overview: "In the near future, Major is the first of her kind: A human saved from a terrible crash.",
-        posterPath: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=600&auto=format&fit=crop",
-        releaseDate: "2017-03-31",
-        voteAverage: 6.3
-    },
-    {
-        _id: 'm10',
-        title: "Tron: Ares",
-        overview: "A highly sophisticated Program, Ares, is sent from the digital world into the real world.",
-        posterPath: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=600&auto=format&fit=crop",
-        releaseDate: "2025-10-10",
-        voteAverage: 9.1
-    },
-    {
-        _id: 'm11',
-        title: "Moonlight Drift",
-        overview: "Two lovers on different lunar bases try to connect through quantum telepathy.",
-        posterPath: "https://images.unsplash.com/photo-1478147427282-58a87a120781?q=80&w=600&auto=format&fit=crop",
-        releaseDate: "2026-01-01",
-        voteAverage: 8.9
-    },
-    {
-        _id: 'm12',
-        title: "Project Hail Mary",
-        overview: "Ryland Grace is the sole survivor on a desperate, last-chance mission.",
-        posterPath: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=600&auto=format&fit=crop",
-        releaseDate: "2026-06-15",
-        voteAverage: 9.5
-    }
-];
+import TrailerModal from '../components/UI/TrailerModal';
+import { movieService } from '../services/movieService';
+import { Play, Cpu, Zap, Activity, Binary } from 'lucide-react';
 
 const Home = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedMovie, setSelectedMovie] = useState(null);
   const containerRef = useRef(null);
 
   const { scrollYProgress } = useScroll({
@@ -119,11 +22,12 @@ const Home = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-        setMovies(MOCK_MOVIES);
+    const fetchMovies = async () => {
+        const data = await movieService.getAllMovies();
+        setMovies(data);
         setLoading(false);
-    }, 1000);
-    return () => clearTimeout(timer);
+    };
+    fetchMovies();
   }, []);
 
   const heroMovie = movies[0];
@@ -139,7 +43,7 @@ const Home = () => {
       {/* Cinematic Hero Section */}
       {!loading && heroMovie && (
         <section className="relative flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 mb-24 md:mb-48 min-h-[60vh] md:min-h-[70vh]">
-          {/* Parallax Background Text - Hidden on mobile for performance and layout */}
+          {/* Parallax Background Text */}
           <motion.div 
             style={{ y: y1, opacity }}
             className="hidden lg:block absolute -left-20 top-20 text-[10vw] font-black text-white/[0.03] select-none pointer-events-none font-orbitron whitespace-nowrap"
@@ -203,33 +107,36 @@ const Home = () => {
               <Link to={`/movie/${heroMovie._id}`} className="cyber-border inline-flex items-center justify-center px-6 md:px-10 py-3 md:py-4 bg-cyan-neon text-black font-black uppercase text-[10px] md:text-sm tracking-widest hover:bg-white transition-all box-glow group">
                 Purchase Access
               </Link>
-              <button className="inline-flex items-center justify-center px-6 md:px-10 py-3 md:py-4 glass border border-white/10 font-bold hover:bg-white/5 transition-all gap-2 group text-[10px] md:text-sm">
+              <button 
+                onClick={() => setSelectedMovie(heroMovie)}
+                className="inline-flex items-center justify-center px-6 md:px-10 py-3 md:py-4 glass border border-white/10 font-bold hover:bg-white/5 transition-all gap-2 group text-[10px] md:text-sm"
+              >
                 <Play className="w-4 h-4 md:w-5 md:h-5 text-pink-neon" fill="currentColor" /> <span className="glitch-hover">Scan Trailer</span>
               </button>
             </motion.div>
           </div>
 
-          {/* Hero Poster - Scaled down for mobile or hidden if too large */}
+          {/* Hero Poster */}
           <motion.div 
             style={{ y: y2 }}
             className="flex-1 relative w-full aspect-[2/3] md:aspect-[3/4] max-w-[280px] md:max-w-md hidden sm:block"
           >
              <div className="absolute -inset-4 border border-cyan-neon/20 rounded-3xl animate-pulse hidden md:block" />
-             <div className="absolute -top-10 -right-10 text-cyan-neon font-black opacity-10 hidden lg:block text-8xl font-orbitron">B-01</div>
+             <div className="absolute -top-10 -right-10 text-cyan-neon font-black opacity-10 hidden lg:block text-8xl font-orbitron uppercase">Sector.H</div>
              
-             <FloatingCard className="w-full h-full p-2 border-2 border-cyan-neon/30 ml-auto overflow-hidden">
+             <FloatingCard className="w-full h-full p-2 border-2 border-cyan-neon/30 ml-auto overflow-hidden group">
                <img 
                  src={heroMovie.posterPath} 
                  alt={heroMovie.title}
-                 className="w-full h-full object-cover rounded-xl grayscale-[50%] hover:grayscale-0 transition-all duration-700"
+                 className="w-full h-full object-cover rounded-xl grayscale-[50%] group-hover:grayscale-0 transition-all duration-700"
                />
                
-               <div className="absolute bottom-4 md:bottom-6 left-4 md:left-6 right-4 md:right-6 glass p-4 md:p-6 rounded-xl border border-white/10 flex justify-between items-center">
+               <div className="absolute bottom-4 md:bottom-6 left-4 md:left-6 right-4 md:right-6 glass p-4 md:p-6 rounded-xl border border-white/10 flex justify-between items-center transform transition-transform group-hover:translate-y-[-5px]">
                  <div className="max-w-[70%]">
-                   <h3 className="font-bold text-sm md:text-xl font-orbitron tracking-tight truncate">{heroMovie.title}</h3>
+                   <h3 className="font-bold text-sm md:text-xl font-orbitron tracking-tight truncate uppercase">{heroMovie.title}</h3>
                    <div className="flex items-center gap-1 md:gap-2 mt-1 md:mt-2">
-                       <span className="text-[8px] md:text-[10px] bg-cyan-neon/20 text-cyan-neon px-1.5 md:px-2 py-0.5 rounded border border-cyan-neon/30 font-bold">UHD</span>
-                       <span className="text-[8px] md:text-[10px] bg-pink-neon/20 text-pink-neon px-1.5 md:px-2 py-0.5 rounded border border-pink-neon/30 font-bold">ATMOS</span>
+                       <span className="text-[8px] md:text-[10px] bg-cyan-neon/20 text-cyan-neon px-1.5 md:px-2 py-0.5 rounded border border-cyan-neon/30 font-bold uppercase">{heroMovie.metadata?.aiConfidence || 'AI.CONF'}</span>
+                       <span className="text-[8px] md:text-[10px] bg-pink-neon/20 text-pink-neon px-1.5 md:px-2 py-0.5 rounded border border-pink-neon/30 font-bold uppercase">{heroMovie.metadata?.archiveStatus || 'STATUS'}</span>
                    </div>
                  </div>
                  <div className="flex flex-col items-center bg-black/60 rounded-lg p-2 md:p-3 border border-white/10 shrink-0">
@@ -245,11 +152,11 @@ const Home = () => {
       {/* Gritty Divider */}
       <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-16 md:mb-32 relative">
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 glass px-3 md:px-4 py-0.5 md:py-1 border border-white/10 text-[8px] md:text-[10px] font-bold text-gray-500 uppercase tracking-widest whitespace-nowrap">
-              End Transmission // Section 01
+              End Transmission // Section 0-{movies.length}
           </div>
       </div>
 
-      {/* Now Showing Grid - Responsive Layout Fixes */}
+      {/* Now Showing Grid */}
       <section className="relative">
         <div className="absolute -left-20 top-0 w-40 h-full bg-cyan-neon/5 blur-[100px] pointer-events-none" />
         
@@ -281,7 +188,6 @@ const Home = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-10">
             {movies.slice(1).map((movie, index) => (
               <Link to={`/movie/${movie._id}`} key={movie._id} className="block group relative">
-                {/* RESPONSIVE HEIGHT: h-[280px] on mobile, h-[450px] on desktop */}
                 <FloatingCard delay={index * 0.05} className="h-[280px] md:h-[450px] relative overflow-hidden p-0 border border-white/10 group-hover:border-white/30">
                   <img 
                     src={movie.posterPath} 
@@ -289,23 +195,26 @@ const Home = () => {
                     className="w-full h-full object-cover rounded-xl transition-all duration-700 group-hover:scale-105 group-hover:rotate-1 grayscale-[30%] group-hover:grayscale-0"
                     loading="lazy"
                   />
-                  {/* Digital Grain Overlay */}
-                  <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
                   
                   {/* Heavy Overlay Gradient */}
                   <div className="absolute inset-0 bg-gradient-to-t from-space-950 via-space-950/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity" />
                   
                   <div className="absolute bottom-0 w-full p-3 md:p-6 space-y-2 md:space-y-4">
+                    <div className="flex gap-2 items-center">
+                        <span className="text-[8px] font-black text-cyan-neon uppercase tracking-tighter bg-cyan-neon/10 px-1 border border-cyan-neon/20">Sec.{movie.metadata?.uplinkPort || 'UNK'}</span>
+                    </div>
                     <h3 className="font-black text-xs md:text-xl font-orbitron leading-none uppercase tracking-tighter truncate md:whitespace-normal">{movie.title}</h3>
                     
                     <div className="flex items-center gap-2 md:gap-4 text-[8px] md:text-[10px] font-bold text-gray-500">
                         <span className="flex items-center gap-1 text-yellow-400/80"><Zap className="w-2 md:w-3 h-2 md:h-3" /> {movie.voteAverage?.toFixed(1)}</span>
-                        <span className="hidden sm:inline">{new Date(movie.releaseDate).getFullYear()}</span>
+                        <span className="hidden sm:inline font-black uppercase text-pink-neon/60">{movie.metadata?.signalStrength || '??%'} Strength</span>
                     </div>
 
-                    <button className="w-full py-1.5 md:py-3 mt-2 md:mt-4 bg-transparent border border-white/20 hover:bg-white hover:text-black rounded-sm md:rounded-lg text-[8px] md:text-xs font-black uppercase tracking-widest transition-all opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 cursor-pointer hidden md:block">
-                      Initialize
-                    </button>
+                    <div className="flex gap-2 pt-2 md:pt-4 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all">
+                        <button className="flex-1 py-1.5 md:py-3 bg-white text-black rounded-sm text-[8px] md:text-xs font-black uppercase tracking-widest hover:bg-cyan-neon transition-colors">
+                            Initialize
+                        </button>
+                    </div>
                   </div>
                 </FloatingCard>
               </Link>
@@ -313,6 +222,13 @@ const Home = () => {
           </div>
         )}
       </section>
+
+      {/* Trailer Modal Integration */}
+      <TrailerModal 
+        isOpen={!!selectedMovie} 
+        onClose={() => setSelectedMovie(null)} 
+        movie={selectedMovie} 
+      />
     </motion.div>
   );
 };

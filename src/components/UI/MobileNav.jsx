@@ -1,9 +1,9 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Home as HomeIcon, Film, User, Settings } from 'lucide-react';
+import { Home as HomeIcon, Film, User, Settings, Search } from 'lucide-react';
 
-const MobileNav = () => {
+const MobileNav = ({ onOpenSearch }) => {
     return (
         <motion.div 
             initial={{ y: 100 }}
@@ -16,6 +16,10 @@ const MobileNav = () => {
 
                 <NavButton to="/" icon={<HomeIcon className="w-5 h-5" />} label="Home" />
                 <NavButton to="/movies" icon={<Film className="w-5 h-5" />} label="Movies" />
+                <button onClick={onOpenSearch} className="flex flex-col items-center gap-1 text-gray-500 hover:text-white transition-all">
+                    <Search className="w-5 h-5" />
+                    <span className="text-[8px] font-black uppercase tracking-widest">Search</span>
+                </button>
                 <NavButton to="/profile" icon={<User className="w-5 h-5" />} label="Profile" />
                 <NavButton to="/admin" icon={<Settings className="w-5 h-5" />} label="Admin" />
             </div>

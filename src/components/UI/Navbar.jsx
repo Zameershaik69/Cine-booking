@@ -5,7 +5,7 @@ import { Film, User, Search, LogOut } from 'lucide-react';
 import { AuthContext } from '../../context/AuthContext';
 import Login from '../Auth/Login';
 
-const Navbar = () => {
+const Navbar = ({ onOpenSearch }) => {
   const { user, logout } = useContext(AuthContext);
   const [showLogin, setShowLogin] = useState(false);
   return (
@@ -43,7 +43,10 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-6">
-          <button className="p-2 hover:bg-cyan-neon/10 rounded-sm transition-all cursor-pointer text-gray-400 hover:text-cyan-neon hidden sm:block">
+          <button 
+            onClick={onOpenSearch}
+            className="p-2 hover:bg-cyan-neon/10 rounded-sm transition-all cursor-pointer text-gray-400 hover:text-cyan-neon hidden sm:block"
+          >
             <Search className="w-5 h-5" />
           </button>
           
